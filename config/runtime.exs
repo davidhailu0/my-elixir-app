@@ -20,11 +20,6 @@ if System.get_env("PHX_SERVER") do
   config :my_live_app, MyLiveAppWeb.Endpoint, server: true
 end
 
-config :my_live_app, MyLiveApp.Repo,
-  # Your database configuration here
-  url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
-
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
@@ -53,13 +48,14 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "example.com"
+  host = System.get_env("RENDER_EXTERNAL_HOSTNAME") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :my_live_app, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :my_live_app, MyLiveAppWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
+    server: true,
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
