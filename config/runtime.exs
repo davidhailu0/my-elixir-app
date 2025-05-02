@@ -7,19 +7,6 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
-# ## Using releases
-#
-# If you use `mix release`, you need to explicitly enable the server
-# by passing the PHX_SERVER=true when you start it:
-#
-#     PHX_SERVER=true bin/my_live_app start
-#
-# Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
-# script that automatically sets the env var above.
-if System.get_env("PHX_SERVER") do
-  config :my_live_app, MyLiveAppWeb.Endpoint, server: true
-end
-
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
@@ -31,12 +18,11 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :my_live_app, MyLiveApp.Repo,
-    # ssl: true,
-    # ssl_opts: [
-    #   verify: :verify_none
-    # ],
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    ssl: true,
+    # Temporary for testing; see notes for production
+    ssl_opts: [verify: :verify_none],
     socket_options: maybe_ipv6,
     queue_target: 5000,
     queue_interval: 1000
