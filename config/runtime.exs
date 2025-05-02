@@ -20,9 +20,9 @@ if config_env() == :prod do
   config :my_live_app, MyLiveApp.Repo,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-    ssl: true,
+    ssl: [cacertfile: "priv/certs/ca.pem"],
     # Temporary for testing; see notes for production
-    ssl_opts: [verify: :verify_none],
+    # ssl_opts: [verify: :verify_none],
     socket_options: maybe_ipv6,
     queue_target: 5000,
     queue_interval: 1000
