@@ -20,6 +20,11 @@ if System.get_env("PHX_SERVER") do
   config :my_live_app, MyLiveAppWeb.Endpoint, server: true
 end
 
+config :my_live_app, MyLiveApp.Repo,
+  # Your database configuration here
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
@@ -31,7 +36,7 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :my_live_app, MyLiveApp.Repo,
-    ssl: [cacertfile: Path.expand("priv/certs/ca.pem")],
+    ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
