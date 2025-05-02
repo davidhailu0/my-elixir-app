@@ -32,10 +32,6 @@ if config_env() == :prod do
 
   config :my_live_app, MyLiveApp.Repo,
     ssl: [cacertfile: Path.expand("priv/certs/ca.pem")],
-    # ssl_opts: [
-    #   verify: :verify_peer,
-    #   cacertfile: Path.expand("priv/certs/ca.pem")
-    # ],
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
